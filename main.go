@@ -59,7 +59,7 @@ func main() {
 
 	app := fiber.New()
 
-	app.Get("/", func(c *fiber.Ctx) error {
+	app.Get("/", middlerware, func(c *fiber.Ctx) error {
 		return c.SendString("Hello, Fiber!")
 	})
 
@@ -74,7 +74,7 @@ func main() {
 
 func SuppliersModule(router fiber.Router) {
 	router.Post("/", createSubplierController)
-	router.Get("/", getSupplierController)
+	router.Get("/", middlerware, getSupplierController)
 	router.Get("/:id", getSupplierByIDController)
 	router.Patch("/:id", updateSupplierController)
 	router.Delete("/:id", deleteSupplierController)
@@ -302,4 +302,12 @@ func getSupplierController(c *fiber.Ctx) error {
 
 	// ส่งข้อมูล suppliers กลับในรูปแบบ JSON
 	return c.Status(fiber.StatusOK).JSON(suppliers)
+}
+
+func middlerware(c *fiber.Ctx) error {
+	// Middleware ที่จะทำงานก่อนทุกๆ request
+	fmt.Println("Middleware called")
+	c.Next()                                       // เรียกใช้ c.Next() เพื่อให้ Fiber ไปยัง handler ถัดไป
+	fmt.Println("Middleware after handler called") // จะทำงานหลังจาก handler เสร็จ
+	return nil                                     // คืนค่า nil เพื่อบอกว่าไม่มีข้อผิดพลาด
 }
