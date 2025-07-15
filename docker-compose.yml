@@ -1,0 +1,35 @@
+version: "3.8"
+
+services:
+  postgres:
+    image: postgres:latest
+    # host (ip address) ของ Postgres จะเป็นชื่อของ service นี้ ซึ่งในที่นี้คือ postgres
+    container_name: postgres
+    environment:
+      # maintenace database
+      POSTGRES_DB: mydatabase
+      # username
+      POSTGRES_USER: myuser
+      # password
+      POSTGRES_PASSWORD: mypassword
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    restart: unless-stopped
+
+  #  pgAdmin สามารถเชื่อมต่อกับ Postgres ใน docker-compose ได้เพราะทั้งสองรันอยู่ใน network เดียวกัน และเราใช้ชื่อ service (postgres) เป็น hostname ในการเชื่อมต่อแทน IP address โดยผู้ใช้เป็นผู้นำข้อมูลเหล่านี้ไปตั้งค่าในหน้า UI ของ pgAdmin เอง.
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "5050:80"
+    depends_on:
+      - postgres
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
