@@ -59,7 +59,9 @@ func main() {
 
 	app := fiber.New()
 
-	app.Get("/", middlerware, func(c *fiber.Ctx) error {
+	// TODO: สร้าง Middleware ที่จะทำงานก่อนทุกๆ request
+	// TODO: Middleware คือ ฟังก์ชันที่ทำงานก่อนหรือหลังจาก handler หลัก (1, 2, hadler function, 2, 1)
+	app.Get("/", middlerware, middlerware2, func(c *fiber.Ctx) error {
 		return c.SendString("Hello, Fiber!")
 	})
 
@@ -74,7 +76,7 @@ func main() {
 
 func SuppliersModule(router fiber.Router) {
 	router.Post("/", createSubplierController)
-	router.Get("/", middlerware, getSupplierController)
+	router.Get("/", middlerware, middlerware2, getSupplierController)
 	router.Get("/:id", getSupplierByIDController)
 	router.Patch("/:id", updateSupplierController)
 	router.Delete("/:id", deleteSupplierController)
@@ -310,4 +312,12 @@ func middlerware(c *fiber.Ctx) error {
 	c.Next()                                       // เรียกใช้ c.Next() เพื่อให้ Fiber ไปยัง handler ถัดไป
 	fmt.Println("Middleware after handler called") // จะทำงานหลังจาก handler เสร็จ
 	return nil                                     // คืนค่า nil เพื่อบอกว่าไม่มีข้อผิดพลาด
+}
+
+func middlerware2(c *fiber.Ctx) error {
+	// Middleware ที่จะทำงานก่อนทุกๆ request
+	fmt.Println("Middleware2 called")
+	c.Next()                                        // เรียกใช้ c.Next() เพื่อให้ Fiber ไปยัง handler ถัดไป
+	fmt.Println("Middleware2 after handler called") // จะทำงานหลังจาก handler เสร็จ
+	return nil                                      // คืนค่า nil เพื่อบอกว่าไม่มีข้อผิดพลาด
 }
