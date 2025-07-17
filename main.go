@@ -16,6 +16,8 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 
+	"github.com/gofiber/fiber/v2/middleware/logger"
+
 	"database/sql"
 
 	_ "github.com/lib/pq" // คนที่ใช้งาน lib นี้คือ "database/sql" ไม่ใช่เราเขียน เลยต้องใส่ _ ด้านหน้า
@@ -67,6 +69,9 @@ func main() {
 	}
 
 	app := fiber.New()
+
+	// funcrion logger
+	app.Use(logger.New())
 
 	// TODO: สร้าง Middleware ที่จะทำงานก่อนทุกๆ request
 	// TODO: Middleware คือ ฟังก์ชันที่ทำงานก่อนหรือหลังจาก handler หลัก (1, 2, hadler function, 2, 1)
