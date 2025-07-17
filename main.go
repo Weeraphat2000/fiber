@@ -19,6 +19,15 @@ import (
 	"database/sql"
 
 	_ "github.com/lib/pq" // คนที่ใช้งาน lib นี้คือ "database/sql" ไม่ใช่เราเขียน เลยต้องใส่ _ ด้านหน้า
+	// ตัว lib/pq จะ register ตัวเอง เป็น driver ชื่อ "postgres" ให้กับ database/sql
+	// ถ้าไม่ import ด้วย _ จะเกิด error ว่า Go ไม่รู้จัก driver "postgres"
+	//
+	//
+	//
+	//
+	//
+	// MySQL: "github.com/go-sql-driver/mysql"
+	// SQLite: "modernc.org/sqlite" หรือ "github.com/mattn/go-sqlite3"
 )
 
 const (
